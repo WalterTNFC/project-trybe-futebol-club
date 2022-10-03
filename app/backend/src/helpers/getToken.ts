@@ -8,6 +8,6 @@ interface IToken {
 }
 
 export default function getToken(payload: IToken): string {
-  const token = jwt.sign(payload, 'secret');
+  const token = jwt.sign(payload, 'jwt_secret');
   return token;
 }
