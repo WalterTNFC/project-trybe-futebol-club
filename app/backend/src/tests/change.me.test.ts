@@ -4,7 +4,9 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
+import User from '../database/models/user';
+
+// import Example from '../database/models/ExampleModel';
 
 import { Response } from 'superagent';
 
@@ -12,7 +14,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
+describe('Testa o Requisito 3', () => {
   /**
    * Exemplo do uso de stubs com tipos
    */
@@ -39,7 +41,59 @@ describe('Seu teste', () => {
   //   expect(...)
   // });
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+  describe('Testa o sucesso do meotodo POST da rota /login', () => {
+    before(async () =>  {
+      sinon
+        .stub(User, 'findOne')
+        .resolves({
+          id: 1,
+          username: 'test',
+          role: 'test',
+          email: 'test@test.com',
+          password: '123456'
+        } as User); 
+    });
+
+    after(async () => {
+      (User.findOne as sinon.SinonStub).restore();
+    })
+
+    it('Verificação de status igual a 200', async () => {
+      const chaiHttpResponse: Response = await chai
+        .request(app)
+        .post('/login')
+        .send({
+          email: 'test@test.com',
+          password: 'secret_test',
+        });
+    
+      expect(chaiHttpResponse.status).to.be.eq(200);
+      expect(chaiHttpResponse.body).to.have.key('token');
+    });
+  });
+
+  describe('Verifica se o usuário existe', () => {
+    before(async () => {
+      sinon
+        .stub(User, 'findOne')
+        .resolves(null)
+    });
+
+    after(async () => {
+      (User.findOne as sinon.SinonStub).restore();
+    });
+
+    it('Verifica se retorna status 404', async () => {
+      const chaiHttpResponse: Response = await chai
+        .request(app)
+        .post('/login')
+        .send({
+          email: 'test@gamil.com',
+          password: '12345678',
+        });
+
+        expect(chaiHttpResponse.status).to.be.equal(404);
+        expect(chaiHttpResponse.body.message).to.be.equal('User not found.');
+    })
   });
 });
