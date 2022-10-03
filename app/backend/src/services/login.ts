@@ -6,7 +6,7 @@ export async function login(email: string, password: string) {
   const user = await User.findOne({ where: { email } });
   console.log(password);
   if (!user) {
-    return { code: 400, error: 'User not found' };
+    return { code: 401, error: 'Incorrect email or password' };
   }
 
   await decrypt(user.password, password);
