@@ -24,7 +24,7 @@ export async function loginValidate(token: string | undefined) {
 
   const tokenId = getTokenId(token);
 
-  const { role } = await User.findOne({ where: { tokenId } }) as User;
+  const { role } = await User.findOne({ where: { id: tokenId } }) as User;
 
   return { code: 200, data: role };
 }
