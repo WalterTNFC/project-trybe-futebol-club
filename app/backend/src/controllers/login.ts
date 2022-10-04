@@ -15,4 +15,14 @@ export async function login(req: Request, res: Response) {
   return res.status(code).json({ token });
 }
 
+export async function loginValidate(req: Request, res: Response) {
+  const { authorization: token } = req.headers;
+  const { code, error, data } = await User.loginValidate(token);
+
+  if (error) {
+    res.status(code).json({ messge: error });
+  }
+  return res.status(code).json({ role: data });
+}
+
 export default login;
