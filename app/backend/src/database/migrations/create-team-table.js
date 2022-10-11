@@ -6,14 +6,13 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      teamName: {
+      team_name: {
         type: Sequelize.STRING,
         allowNull: false,
-        field: 'team_name',
       }
     });
   },
-  down: async (queryInterface, _Sequelize) => {
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('teams');
   },
 }
