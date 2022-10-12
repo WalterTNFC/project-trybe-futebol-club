@@ -46,4 +46,13 @@ export async function createMatch(match: IMatch) {
   return { code: 201, data: { id, ...match } };
 }
 
+export async function finishMatch(id: number) {
+  const match = Match.findOne({ where: { id } });
+  if (!match) {
+    return { code: 400, error: 'Not Found' };
+  }
+  await Match.update({ inProgress: false }, { where: { id } });
+  return { code: 200, data: 'Finished' };
+}
+
 export default getAllMatches;

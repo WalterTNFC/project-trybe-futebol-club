@@ -23,4 +23,14 @@ export async function createMatch(req: Request, res: Response, next: NextFunctio
   }
 }
 
+export async function finishMatch(req: Request, res: Response) {
+  const { id } = req.params;
+  const { code, data, error } = await Match.finishMatch(Number(id));
+  if (error) {
+    return res.status(code).json({ message: error });
+  }
+
+  return res.status(200).json({ message: data });
+}
+
 export default getAllMatches;
