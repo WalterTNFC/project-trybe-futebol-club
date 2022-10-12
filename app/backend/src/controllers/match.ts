@@ -33,4 +33,18 @@ export async function finishMatch(req: Request, res: Response) {
   return res.status(200).json({ message: data });
 }
 
+export async function updateMatch(req: Request, res: Response) {
+  const { id } = req.params;
+  const { homeTeamGoals, awayTeamGoals } = req.body;
+  const { code, data, error } = await Match.updateMatch(
+    Number(id),
+    { homeTeamGoals, awayTeamGoals },
+  );
+  if (error) {
+    return res.status(code).json({ message: error });
+  }
+
+  return res.status(200).json({ message: data });
+}
+
 export default getAllMatches;

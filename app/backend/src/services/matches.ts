@@ -10,6 +10,11 @@ interface IMatch {
   inProgress: boolean,
 }
 
+interface IGoals {
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+}
+
 export async function getAllMatches() {
   const matches = await Match.findAll({
     include: [
@@ -60,6 +65,22 @@ export async function finishMatch(id: number) {
   }
   await Match.update({ inProgress: false }, { where: { id } });
   return { code: 200, data: 'Finished' };
+}
+
+export async function updateMatch(id: number, goals: IGoals) {
+  const { homeTeamGoals, awayTeamGoals } = goals;
+
+  const match = Match.findOne({ where: { id } });
+  if (!match) {
+    return { code: 400, error: 'Not Found' };
+  }
+
+  await Match.update(
+    { homeTeamGoals, awayTeamGoals },
+    { where: { id } },
+  );
+
+  return { code: 200, data: 'Match results updated!' };
 }
 
 export default getAllMatches;

@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/', matchesControllers.getAllMatches);
 router.post('/', auth, matchesControllers.createMatch);
+router.patch('/:id', matchesControllers.updateMatch);
 router.patch('/:id/finish', matchesControllers.finishMatch);
 
 export default router;
