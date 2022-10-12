@@ -30,10 +30,17 @@ export async function getAllMatches() {
 
 export async function createMatch(match: IMatch) {
   const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress } = match;
+  const verifyHomeTeam = await Team.findOne({ where: { id: homeTeam } });
+  const verifyAwayTeam = await Team.findOne({ where: { id: awayTeam } });
 
-  if (!inProgress) {
-    return { code: 404, error: 'Problem Found' };
+  if (homeTeam === awayTeam) {
+    return { code: 401, error: 'It is not possible to create a match with two equal teams' };
   }
+
+  if (!verifyHomeTeam || !verifyAwayTeam) {
+    return { code: 404, error: 'There is no team with such id!' };
+  }
+  if (!inProgress) { return { code: 404, error: 'Problem Found' }; }
 
   const { id } = await Match.create({
     homeTeam,

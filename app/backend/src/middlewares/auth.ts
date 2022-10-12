@@ -15,7 +15,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, 'jwt_secret');
     next();
   } catch (error) {
-    return res.status(404).json({
+    return res.status(401).json({
       message: 'Token must be a valid token',
     });
   }
